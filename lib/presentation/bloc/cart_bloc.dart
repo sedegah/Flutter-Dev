@@ -1,8 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../domain/entities/cart_item.dart';
-import '../domain/models/cart_event.dart';
-import '../domain/models/cart_state.dart';
-import '../data/services/api_service.dart';
+import '../../domain/entities/cart_item.dart';
+import '../../domain/models/cart_event.dart';
+import '../../domain/models/cart_state.dart';
+import '../../data/services/api_service.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
   final ApiService apiService;
