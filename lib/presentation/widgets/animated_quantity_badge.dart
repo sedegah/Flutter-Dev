@@ -18,8 +18,12 @@ class AnimatedQuantityBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
+        color: const Color(0xFFF3F4F6),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: Colors.grey[200]!,
+          width: 1,
+        ),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -27,23 +31,32 @@ class AnimatedQuantityBadge extends StatelessWidget {
           IconButton(
             iconSize: 18,
             onPressed: isProcessing ? null : onDecrement,
-            icon: const Icon(Icons.remove),
+            icon: Icon(
+              Icons.remove,
+              color: isProcessing ? Colors.grey[300] : Colors.grey[600],
+            ),
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+            constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+            splashRadius: 20,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 6.0),
             child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 250),
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return ScaleTransition(scale: animation, child: child);
               },
-              child: Text(
-                '$quantity',
-                key: ValueKey<int>(quantity),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+              child: SizedBox(
+                width: 24,
+                child: Text(
+                  '$quantity',
+                  key: ValueKey<int>(quantity),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    color: Color(0xFF1F2937),
+                  ),
                 ),
               ),
             ),
@@ -51,9 +64,13 @@ class AnimatedQuantityBadge extends StatelessWidget {
           IconButton(
             iconSize: 18,
             onPressed: isProcessing ? null : onIncrement,
-            icon: const Icon(Icons.add),
+            icon: Icon(
+              Icons.add,
+              color: isProcessing ? Colors.grey[300] : const Color(0xFF6366F1),
+            ),
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 36, minHeight: 36),
+            constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+            splashRadius: 20,
           ),
         ],
       ),

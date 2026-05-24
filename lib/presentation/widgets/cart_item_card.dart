@@ -21,31 +21,53 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.grey[200]!,
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(12.0),
+        padding: const EdgeInsets.all(14.0),
         child: Row(
           children: [
             // Product Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               child: Container(
-                width: 80,
-                height: 80,
-                color: Colors.grey[300],
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  color: Colors.grey[150],
+                  borderRadius: BorderRadius.circular(12),
+                ),
                 child: Image.network(
                   item.imageUrl,
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
-                      child: Icon(Icons.shopping_bag, color: Colors.grey[600]),
+                      child: Icon(
+                        Icons.shopping_bag,
+                        color: Colors.grey[400],
+                        size: 32,
+                      ),
                     );
                   },
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 14),
             // Product Details
             Expanded(
               child: Column(
@@ -54,19 +76,35 @@ class CartItemCard extends StatelessWidget {
                   Text(
                     item.name,
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
+                      letterSpacing: -0.3,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '\$${item.subtotal.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.green,
-                      fontWeight: FontWeight.w600,
+                  const SizedBox(height: 6),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '\$${item.price.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
+                        ),
+                        const TextSpan(text: '  '),
+                        TextSpan(
+                          text: '\$${item.subtotal.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: Color(0xFF6366F1),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -85,8 +123,9 @@ class CartItemCard extends StatelessWidget {
             IconButton(
               onPressed: isProcessing ? null : onRemove,
               icon: const Icon(Icons.close),
-              color: Colors.red,
+              color: Colors.grey[400],
               iconSize: 20,
+              splashRadius: 24,
             ),
           ],
         ),

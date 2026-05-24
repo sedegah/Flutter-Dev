@@ -13,50 +13,74 @@ void showRollbackErrorBottomSheet(
     context: context,
     backgroundColor: Colors.white,
     shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
     ),
     builder: (context) => Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: EdgeInsets.only(
+        top: 32,
+        left: 24,
+        right: 24,
+        bottom: 24 + MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
-            Icons.error_outline,
-            color: Colors.red,
-            size: 48,
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.red.withOpacity(0.1),
+            ),
+            child: const Icon(
+              Icons.error_outline,
+              color: Color(0xFFDC2626),
+              size: 40,
+            ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
+          Text(
+            'Oops!',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.w700,
+              color: const Color(0xFF111827),
+            ),
+          ),
+          const SizedBox(height: 12),
           Text(
             errorMessage,
             style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF374151),
             ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 12),
           const Text(
-            'Cart update failed. Changes have been reverted.',
+            'Your cart has been restored to its previous state.',
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
+              fontSize: 13,
+              color: Color(0xFF9CA3AF),
+              fontWeight: FontWeight.w500,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 28),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
               onDismiss();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: const Color(0xFFDC2626),
               foregroundColor: Colors.white,
-              minimumSize: const Size(double.infinity, 48),
+              minimumSize: const Size(double.infinity, 50),
+              elevation: 0,
             ),
             child: const Text(
-              'Got it',
-              style: TextStyle(fontWeight: FontWeight.bold),
+              'Dismiss',
+              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
             ),
           ),
         ],

@@ -6,24 +6,24 @@
 
 ---
 
-## 🎯 Key Features
+##  Key Features
 
-### ⚡ Optimistic UI Updates
+### Optimistic UI Updates
 - **Instant feedback** when users interact with the cart
 - Cart updates appear immediately while API calls happen in the background
 - Smooth animations for quantity changes and price updates
 
-### 🔄 Automatic Rollback
+### Automatic Rollback
 - If a server request fails (e.g., item out of stock), the UI automatically reverts
 - Error messages guide users on what went wrong
 - No broken or confused state
 
-### 🎮 Demo Control Panel
+### Demo Control Panel
 - **Network Latency Slider**: Simulate 0ms–3000ms delays
 - **Force Failure Toggle**: Test rollback behavior without real failures
 - Perfect for presentations and demonstrations
 
-### 🎨 Polished UX
+### Polished UX
 - Animated quantity counters (scale transition)
 - Floating checkout bar with animated totals
 - Bottom sheet error notifications with haptic feedback
@@ -31,7 +31,7 @@
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Clean Architecture Layers
 
@@ -57,7 +57,7 @@ Data Layer (API Service & Repositories)
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 cartdash_mvp/
@@ -91,7 +91,7 @@ cartdash_mvp/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Flutter SDK 3.0+
@@ -147,7 +147,7 @@ cartdash_mvp/
 
 ---
 
-## 🔧 Core Technical Details
+##  Core Technical Details
 
 ### CartBloc Optimistic Pattern
 
@@ -199,7 +199,7 @@ AnimatedSwitcher(
 
 ---
 
-## 📊 Dependencies
+##  Dependencies
 
 | Package | Purpose |
 |---------|---------|
@@ -215,16 +215,16 @@ AnimatedSwitcher(
 
 After studying CartDash, you'll understand:
 
-✅ **Optimistic UI patterns** used by Google, Notion, Trello  
-✅ **BloC architecture** for complex state management  
-✅ **Rollback strategies** when network requests fail  
-✅ **Smooth animations** in Flutter  
-✅ **Error recovery** with UX-first thinking  
-✅ **Clean architecture** principles  
+ **Optimistic UI patterns** used by Google, Notion, Trello  
+ **BloC architecture** for complex state management  
+ **Rollback strategies** when network requests fail  
+ **Smooth animations** in Flutter  
+ **Error recovery** with UX-first thinking  
+ **Clean architecture** principles  
 
 ---
 
-## 🚀 Potential Upgrades
+## Potential Upgrades
 
 ### Phase 2: Persistence
 - Add **Hive local database** to persist cart across sessions
@@ -249,7 +249,7 @@ After studying CartDash, you'll understand:
 
 ---
 
-## 📱 Demo Checklist
+## Demo Checklist
 
 Use this before presenting:
 
@@ -265,19 +265,19 @@ Use this before presenting:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 This is an MVP/portfolio project. Feel free to fork, enhance, and customize!
 
 ---
 
-## 📄 License
+## License
 
 MIT License - Free to use and modify
 
 ---
 
-## 💡 Key Insights
+## Key Insights
 
 **Why Optimistic UI matters:**
 - Users expect instant feedback (modern web/apps set this expectation)
@@ -293,4 +293,4 @@ MIT License - Free to use and modify
 
 ---
 
-**Built with ❤️ for Flutter developers learning advanced state management patterns.**
+
