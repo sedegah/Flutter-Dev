@@ -15,23 +15,20 @@ class FloatingCheckoutBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [
-            Color(0xFF5B21B6),
-            Color(0xFF7C3AED),
+            const Color(0xFF6366F1),
+            const Color(0xFF8B5CF6),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: const BorderRadius.vertical(
-          top: Radius.circular(24),
-        ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF5B21B6).withOpacity(0.22),
-            blurRadius: 18,
+            color: const Color(0xFF6366F1).withOpacity(0.3),
+            blurRadius: 20,
             offset: const Offset(0, -4),
           ),
         ],

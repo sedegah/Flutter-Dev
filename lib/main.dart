@@ -24,16 +24,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
-        scaffoldBackgroundColor: const Color(0xFFF7F8FF),
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF6366F1),
           brightness: Brightness.light,
-        ),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFF5B21B6),
-          foregroundColor: Colors.white,
-          elevation: 0,
-          centerTitle: false,
         ),
         fontFamily: 'Roboto',
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -42,17 +35,9 @@ class MyApp extends StatelessWidget {
             foregroundColor: Colors.white,
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
-        ),
-        cardTheme: CardTheme(
-          color: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-          elevation: 2,
-          margin: EdgeInsets.zero,
         ),
       ),
       home: BlocProvider(
