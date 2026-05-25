@@ -245,9 +245,21 @@ class _CartScreenState extends State<CartScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CartDash'),
-        backgroundColor: Colors.green,
-        elevation: 0,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text('CartDash', style: TextStyle(letterSpacing: 0.4)),
+            SizedBox(height: 4),
+            Text(
+              'Build your cart with confidence',
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.white70,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ],
+        ),
       ),
       body: BlocListener<CartBloc, CartState>(
         listener: (context, state) {
@@ -263,11 +275,64 @@ class _CartScreenState extends State<CartScreen> {
         },
         child: Column(
           children: [
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Material(
+                borderRadius: BorderRadius.circular(20),
+                elevation: 1,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                              'Smart cart experience',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              'Add items and watch your cart update instantly with optimistic UI feedback.',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF6B7280),
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEDE9FE),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: const Icon(
+                          Icons.shopping_bag_outlined,
+                          color: Color(0xFF6D28D9),
+                          size: 28,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
             // Demo Control Panel
             DemoControlPanel(apiService: widget.apiService),
             // Product List
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 140, top: 4),
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
@@ -292,54 +357,102 @@ class _CartScreenState extends State<CartScreen> {
       ),
       bottomSheet: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
-          if (state is CartUpdated) {
+          if (state is CartUpdated && state.items.isNotEmpty) {
             return Padding(
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  // Cart Items Display
-                  if (state.items.isNotEmpty)
-                    Container(
-                      color: Colors.grey[100],
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: state.items.map((item) {
-                          return CartItemCard(
-                            item: item,
-                            onIncrement: () {
-                              context.read<CartBloc>().add(
-                                    IncrementQuantityEvent(item.id),
-                                  );
-                            },
-                            onDecrement: () {
-                              context.read<CartBloc>().add(
-                                    DecrementQuantityEvent(item.id),
-                                  );
-                            },
-                            onRemove: () {
-                              context.read<CartBloc>().add(
-                                    RemoveFromCartEvent(item.id),
-                                  );
-                            },
-                            isProcessing: state.isProcessing,
-                          );
-                        }).toList(),
-                      ),
+              child: SafeArea(
+                top: false,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(24),
                     ),
-                  // Floating Checkout Bar
-                  FloatingCheckoutBar(
-                    totalPrice: state.totalPrice,
-                    itemCount: state.items.length,
-                    onCheckout: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Proceeding to checkout...')),
-                      );
-                    },
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 18,
+                        offset: const Offset(0, -4),
+                      ),
+                    ],
                   ),
-                ],
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                          vertical: 14,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Your Cart',
+                              style: TextStyle(
+                                color: Colors.grey[850],
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            Text(
+                              '${state.items.length} item${state.items.length != 1 ? 's' : ''}',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Color(0xFF6B7280),
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 340),
+                        child: ListView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: state.items.length,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            final item = state.items[index];
+                            return CartItemCard(
+                              item: item,
+                              onIncrement: () {
+                                context.read<CartBloc>().add(
+                                      IncrementQuantityEvent(item.id),
+                                    );
+                              },
+                              onDecrement: () {
+                                context.read<CartBloc>().add(
+                                      DecrementQuantityEvent(item.id),
+                                    );
+                              },
+                              onRemove: () {
+                                context.read<CartBloc>().add(
+                                      RemoveFromCartEvent(item.id),
+                                    );
+                              },
+                              isProcessing: state.isProcessing,
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      FloatingCheckoutBar(
+                        totalPrice: state.totalPrice,
+                        itemCount: state.items.length,
+                        onCheckout: () {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Proceeding to checkout...'),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
               ),
             );
           }
@@ -395,31 +508,36 @@ class ProductListItem extends StatelessWidget {
                   Text(
                     product['name'],
                     style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w700,
                       fontSize: 16,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    '\$${product['price']}',
+                    '\$${(product['price'] as double).toStringAsFixed(2)}',
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Color(0xFF4F46E5),
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
               ),
             ),
-            // Add to Cart Button
             ElevatedButton(
               onPressed: onAddToCart,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
+                backgroundColor: const Color(0xFF5B21B6),
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                elevation: 0,
               ),
               child: const Text(
                 'Add',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
             ),
           ],

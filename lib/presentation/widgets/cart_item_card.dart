@@ -25,22 +25,23 @@ class CartItemCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         border: Border.all(
           color: Colors.grey[200]!,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 14,
+            offset: const Offset(0, 3),
           ),
         ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(14.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Product Image
             ClipRRect(
@@ -76,35 +77,51 @@ class CartItemCard extends StatelessWidget {
                   Text(
                     item.name,
                     style: const TextStyle(
-                      fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w700,
                       fontSize: 16,
                       letterSpacing: -0.3,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '\$${item.price.toStringAsFixed(2)}',
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        '4B2 ${item.price.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFEDE9FE),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Qty ${item.quantity}',
                           style: const TextStyle(
-                            fontSize: 13,
-                            color: Colors.grey,
-                            decoration: TextDecoration.lineThrough,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF5B21B6),
                           ),
                         ),
-                        const TextSpan(text: '  '),
-                        TextSpan(
-                          text: '\$${item.subtotal.toStringAsFixed(2)}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            color: Color(0xFF6366F1),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    'Subtotal: \$${item.subtotal.toStringAsFixed(2)}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF4338CA),
                     ),
                   ),
                 ],

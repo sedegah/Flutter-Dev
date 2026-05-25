@@ -27,22 +27,19 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFFF0F4FF),
-            const Color(0xFFF8FAFF),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        color: Colors.white,
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(24),
         ),
-        border: Border(
-          bottom: BorderSide(
-            color: Colors.grey[200]!,
-            width: 1,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
           ),
-        ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,10 +142,10 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
           const SizedBox(height: 16),
           // Force Failure Toggle
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              color: const Color(0xFFF9FAFB),
+              borderRadius: BorderRadius.circular(16),
               border: Border.all(
                 color: Colors.grey[200]!,
                 width: 1,
@@ -157,12 +154,27 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  '🔴 Force Out of Stock',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF374151),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        '🔴 Force Out of Stock',
+                        style: TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
+                      SizedBox(height: 4),
+                      Text(
+                        'Simulate inventory failure to see rollback behavior.',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Switch(
@@ -173,7 +185,7 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
                       widget.apiService.setForceFailure(forceFailure);
                     });
                   },
-                  activeColor: const Color(0xFFDC2626),
+                  activeColor: const Color(0xFF8B5CF6),
                 ),
               ],
             ),
