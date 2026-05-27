@@ -21,18 +21,21 @@ class CartItemCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.cardTheme.color ?? theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: Colors.grey[200]!,
+          color: isDark ? const Color(0xFF243046) : const Color(0xFFE5E7EB),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
             blurRadius: 12,
             offset: const Offset(0, 2),
           ),
@@ -49,7 +52,13 @@ class CartItemCard extends StatelessWidget {
                 width: 90,
                 height: 90,
                 decoration: BoxDecoration(
-                  color: Colors.grey[150],
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+                        : [const Color(0xFFF3F4F6), const Color(0xFFE5E7EB)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Image.network(
@@ -58,8 +67,8 @@ class CartItemCard extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
                       child: Icon(
-                        Icons.shopping_bag,
-                        color: Colors.grey[400],
+                        Icons.shopping_bag_outlined,
+                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF9CA3AF),
                         size: 32,
                       ),
                     );
@@ -75,10 +84,11 @@ class CartItemCard extends StatelessWidget {
                 children: [
                   Text(
                     item.name,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontWeight: FontWeight.w600,
                       fontSize: 16,
                       letterSpacing: -0.3,
+                      color: isDark ? const Color(0xFFF3F4F6) : const Color(0xFF1F2937),
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -89,18 +99,18 @@ class CartItemCard extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: '\$${item.price.toStringAsFixed(2)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13,
-                            color: Colors.grey,
+                            color: isDark ? const Color(0xFF64748B) : Colors.grey,
                             decoration: TextDecoration.lineThrough,
                           ),
                         ),
                         const TextSpan(text: '  '),
                         TextSpan(
                           text: '\$${item.subtotal.toStringAsFixed(2)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
-                            color: Color(0xFF6366F1),
+                            color: theme.colorScheme.primary,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -123,7 +133,7 @@ class CartItemCard extends StatelessWidget {
             IconButton(
               onPressed: isProcessing ? null : onRemove,
               icon: const Icon(Icons.close),
-              color: Colors.grey[400],
+              color: isDark ? const Color(0xFF94A3B8) : Colors.grey[400],
               iconSize: 20,
               splashRadius: 24,
             ),

@@ -243,11 +243,19 @@ class _CartScreenState extends State<CartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('CartDash'),
-        backgroundColor: Colors.green,
-        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none_rounded),
+            onPressed: () {},
+          ),
+          const SizedBox(width: 8),
+        ],
       ),
       body: BlocListener<CartBloc, CartState>(
         listener: (context, state) {
@@ -268,6 +276,7 @@ class _CartScreenState extends State<CartScreen> {
             // Product List
             Expanded(
               child: ListView.builder(
+                padding: const EdgeInsets.symmetric(vertical: 8),
                 itemCount: products.length,
                 itemBuilder: (context, index) {
                   final product = products[index];
@@ -303,7 +312,15 @@ class _CartScreenState extends State<CartScreen> {
                   // Cart Items Display
                   if (state.items.isNotEmpty)
                     Container(
-                      color: Colors.grey[100],
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surface,
+                        border: Border(
+                          top: BorderSide(
+                            color: isDark ? const Color(0xFF243046) : const Color(0xFFE5E7EB),
+                            width: 1,
+                          ),
+                        ),
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: state.items.map((item) {
@@ -362,31 +379,46 @@ class ProductListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
             // Product Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(12),
               child: Container(
-                width: 100,
-                height: 100,
-                color: Colors.grey[300],
+                width: 90,
+                height: 90,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: isDark
+                        ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
+                        : [const Color(0xFFF3F4F6), const Color(0xFFE5E7EB)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
                 child: Image.network(
                   product['image'],
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Center(
-                      child: Icon(Icons.shopping_bag, color: Colors.grey[600]),
+                      child: Icon(
+                        Icons.shopping_bag_outlined,
+                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
+                        size: 32,
+                      ),
                     );
                   },
                 ),
               ),
             ),
-            const SizedBox(width: 12),
+            const SizedBox(width: 16),
             // Product Details
             Expanded(
               child: Column(
@@ -394,32 +426,38 @@ class ProductListItem extends StatelessWidget {
                 children: [
                   Text(
                     product['name'],
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
                       fontSize: 16,
+                      color: isDark ? const Color(0xFFF3F4F6) : const Color(0xFF1F2937),
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 6),
                   Text(
                     '\$${product['price']}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                 ],
               ),
             ),
+            const SizedBox(width: 12),
             // Add to Cart Button
-            ElevatedButton(
+            ElevatedButton.icon(
               onPressed: onAddToCart,
+              icon: const Icon(Icons.add_rounded, size: 16),
+              label: const Text('Add'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              child: const Text(
-                'Add',
-                style: TextStyle(color: Colors.white),
+                backgroundColor: theme.colorScheme.primaryContainer,
+                foregroundColor: theme.colorScheme.onPrimaryContainer,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           ],

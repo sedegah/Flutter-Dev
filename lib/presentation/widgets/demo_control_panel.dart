@@ -26,20 +26,22 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            const Color(0xFFF0F4FF),
-            const Color(0xFFF8FAFF),
-          ],
+          colors: isDark
+              ? [const Color(0xFF1E293B).withOpacity(0.4), const Color(0xFF0F172A).withOpacity(0.4)]
+              : [const Color(0xFFF0F4FF), const Color(0xFFF8FAFF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         border: Border(
           bottom: BorderSide(
-            color: Colors.grey[200]!,
+            color: isDark ? const Color(0xFF243046) : Colors.grey[200]!,
             width: 1,
           ),
         ),
@@ -58,12 +60,12 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
                 ),
               ),
               const SizedBox(width: 10),
-              const Text(
+              Text(
                 '🎮 Demo Control Panel',
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   fontSize: 15,
-                  color: Color(0xFF111827),
+                  color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
                   letterSpacing: -0.2,
                 ),
               ),
@@ -77,12 +79,12 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     '⏱️ Network Latency',
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF374151),
+                      color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151),
                     ),
                   ),
                   Container(
@@ -118,6 +120,7 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
                   });
                 },
                 activeColor: const Color(0xFF6366F1),
+                inactiveColor: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -147,22 +150,22 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: isDark ? const Color(0xFF1E293B) : Colors.white,
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
-                color: Colors.grey[200]!,
+                color: isDark ? const Color(0xFF334155) : Colors.grey[200]!,
                 width: 1,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   '🔴 Force Out of Stock',
                   style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF374151),
+                    color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151),
                   ),
                 ),
                 Switch(
