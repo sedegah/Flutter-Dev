@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/cart_bloc.dart';
 import '../../domain/models/cart_event.dart';
@@ -11,228 +12,29 @@ import '../../data/services/api_service.dart';
 
 class CartScreen extends StatefulWidget {
   final ApiService apiService;
-
-  const CartScreen({
-    Key? key,
-    required this.apiService,
-  }) : super(key: key);
+  const CartScreen({Key? key, required this.apiService}) : super(key: key);
 
   @override
   State<CartScreen> createState() => _CartScreenState();
 }
 
 class _CartScreenState extends State<CartScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
+
   final List<Map<String, dynamic>> products = [
-    {
-      'id': '1',
-      'name': 'Wireless Headphones',
-      'price': 79.99,
-      'image': 'https://via.placeholder.com/150?text=Headphones',
-    },
-    {
-      'id': '2',
-      'name': 'Smart Watch',
-      'price': 199.99,
-      'image': 'https://via.placeholder.com/150?text=SmartWatch',
-    },
-    {
-      'id': '3',
-      'name': 'USB-C Cable',
-      'price': 12.99,
-      'image': 'https://via.placeholder.com/150?text=USB-C',
-    },
-    {
-      'id': '4',
-      'name': 'Phone Case',
-      'price': 24.99,
-      'image': 'https://via.placeholder.com/150?text=PhoneCase',
-    },
-    {
-      'id': '5',
-      'name': 'Screen Protector',
-      'price': 9.99,
-      'image': 'https://via.placeholder.com/150?text=Protector',
-    },
-    {
-      'id': '6',
-      'name': 'Portable Charger',
-      'price': 34.99,
-      'image': 'https://via.placeholder.com/150?text=Charger',
-    },
-    {
-      'id': '7',
-      'name': 'Bluetooth Speaker',
-      'price': 59.99,
-      'image': 'https://via.placeholder.com/150?text=Speaker',
-    },
-    {
-      'id': '8',
-      'name': 'Phone Stand',
-      'price': 14.99,
-      'image': 'https://via.placeholder.com/150?text=Stand',
-    },
-    {
-      'id': '9',
-      'name': 'Laptop Bag',
-      'price': 49.99,
-      'image': 'https://via.placeholder.com/150?text=Bag',
-    },
-    {
-      'id': '10',
-      'name': 'Wireless Mouse',
-      'price': 29.99,
-      'image': 'https://via.placeholder.com/150?text=Mouse',
-    },
-    {
-      'id': '11',
-      'name': 'USB Hub',
-      'price': 19.99,
-      'image': 'https://via.placeholder.com/150?text=Hub',
-    },
-    {
-      'id': '12',
-      'name': 'Keyboard',
-      'price': 79.99,
-      'image': 'https://via.placeholder.com/150?text=Keyboard',
-    },
-    {
-      'id': '13',
-      'name': 'Monitor Stand',
-      'price': 44.99,
-      'image': 'https://via.placeholder.com/150?text=Monitor',
-    },
-    {
-      'id': '14',
-      'name': 'Desk Lamp',
-      'price': 39.99,
-      'image': 'https://via.placeholder.com/150?text=Lamp',
-    },
-    {
-      'id': '15',
-      'name': 'Cable Organizer',
-      'price': 11.99,
-      'image': 'https://via.placeholder.com/150?text=Organizer',
-    },
-    {
-      'id': '16',
-      'name': 'Phone Tripod',
-      'price': 17.99,
-      'image': 'https://via.placeholder.com/150?text=Tripod',
-    },
-    {
-      'id': '17',
-      'name': 'Webcam',
-      'price': 69.99,
-      'image': 'https://via.placeholder.com/150?text=Webcam',
-    },
-    {
-      'id': '18',
-      'name': 'Microphone',
-      'price': 89.99,
-      'image': 'https://via.placeholder.com/150?text=Microphone',
-    },
-    {
-      'id': '19',
-      'name': 'Earbuds Case',
-      'price': 9.99,
-      'image': 'https://via.placeholder.com/150?text=Case',
-    },
-    {
-      'id': '20',
-      'name': 'Phone Strap',
-      'price': 7.99,
-      'image': 'https://via.placeholder.com/150?text=Strap',
-    },
-    {
-      'id': '21',
-      'name': 'Cooling Pad',
-      'price': 39.99,
-      'image': 'https://via.placeholder.com/150?text=Cooling',
-    },
-    {
-      'id': '22',
-      'name': 'Desktop Organizer',
-      'price': 24.99,
-      'image': 'https://via.placeholder.com/150?text=Desk',
-    },
-    {
-      'id': '23',
-      'name': 'Lightning Cable',
-      'price': 14.99,
-      'image': 'https://via.placeholder.com/150?text=Lightning',
-    },
-    {
-      'id': '24',
-      'name': 'HDMI Cable',
-      'price': 9.99,
-      'image': 'https://via.placeholder.com/150?text=HDMI',
-    },
-    {
-      'id': '25',
-      'name': 'Adapter Pack',
-      'price': 19.99,
-      'image': 'https://via.placeholder.com/150?text=Adapter',
-    },
-    {
-      'id': '26',
-      'name': 'Wireless Charger',
-      'price': 29.99,
-      'image': 'https://via.placeholder.com/150?text=Charger',
-    },
-    {
-      'id': '27',
-      'name': 'Phone Ring',
-      'price': 8.99,
-      'image': 'https://via.placeholder.com/150?text=Ring',
-    },
-    {
-      'id': '28',
-      'name': 'Car Phone Mount',
-      'price': 16.99,
-      'image': 'https://via.placeholder.com/150?text=Mount',
-    },
-    {
-      'id': '29',
-      'name': 'Tempered Glass',
-      'price': 11.99,
-      'image': 'https://via.placeholder.com/150?text=Glass',
-    },
-    {
-      'id': '30',
-      'name': 'Screen Cleaner',
-      'price': 6.99,
-      'image': 'https://via.placeholder.com/150?text=Cleaner',
-    },
-    {
-      'id': '31',
-      'name': 'SSD External',
-      'price': 119.99,
-      'image': 'https://via.placeholder.com/150?text=SSD',
-    },
-    {
-      'id': '32',
-      'name': 'USB Flash Drive',
-      'price': 22.99,
-      'image': 'https://via.placeholder.com/150?text=USB',
-    },
-    {
-      'id': '33',
-      'name': 'SD Card',
-      'price': 24.99,
-      'image': 'https://via.placeholder.com/150?text=SD',
-    },
-    {
-      'id': '34',
-      'name': 'Power Bank 10K',
-      'price': 27.99,
-      'image': 'https://via.placeholder.com/150?text=Bank',
-    },
-    {
-      'id': '35',
-      'name': 'Phone Lens',
-      'price': 44.99,
-      'image': 'https://via.placeholder.com/150?text=Lens',
-    },
+    {'id': '1',  'name': 'Wireless Headphones',  'price': 79.99,  'image': 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=400&q=80'},
+    {'id': '2',  'name': 'Smart Watch',           'price': 199.99, 'image': 'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=400&q=80'},
+    {'id': '3',  'name': 'USB-C Cable',           'price': 12.99,  'image': 'https://images.unsplash.com/photo-1563822249548-9a72b6353cd1?w=400&q=80'},
+    {'id': '4',  'name': 'Phone Case',            'price': 24.99,  'image': 'https://images.unsplash.com/photo-1601784551146-ce0a660023ed?w=400&q=80'},
+    {'id': '5',  'name': 'Screen Protector',      'price': 9.99,   'image': 'https://images.unsplash.com/photo-1605787020600-b9ebd5df1d07?w=400&q=80'},
+    {'id': '6',  'name': 'Portable Charger',      'price': 34.99,  'image': 'https://images.unsplash.com/photo-1605248389231-03d9d4e85e8a?w=400&q=80'},
+    {'id': '7',  'name': 'Bluetooth Speaker',     'price': 59.99,  'image': 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&q=80'},
+    {'id': '8',  'name': 'Phone Stand',           'price': 14.99,  'image': 'https://images.unsplash.com/photo-1616440347437-b1c73416efc2?w=400&q=80'},
+    {'id': '9',  'name': 'Laptop Bag',            'price': 49.99,  'image': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&q=80'},
+    {'id': '10', 'name': 'Wireless Mouse',        'price': 29.99,  'image': 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&q=80'},
+    {'id': '11', 'name': 'Mechanical Keyboard',   'price': 89.99,  'image': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80'},
+    {'id': '12', 'name': 'Desk Lamp',             'price': 39.99,  'image': 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&q=80'},
   ];
 
   @override
@@ -242,20 +44,53 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   @override
+  void dispose() {
+    _scrollController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _handleKeyEvent(KeyEvent event) {
+    if (event is KeyDownEvent || event is KeyRepeatEvent) {
+      const step = 180.0;
+      if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
+        _scrollController.animateTo(
+          (_scrollController.offset + step).clamp(0.0, _scrollController.position.maxScrollExtent),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+        );
+      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
+        _scrollController.animateTo(
+          (_scrollController.offset - step).clamp(0.0, _scrollController.position.maxScrollExtent),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+        );
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final textColor = theme.colorScheme.onSurface;
+    final borderColor = isDark ? const Color(0xFF2E3B4E) : const Color(0xFFE2E8F0);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CartDash'),
+        title: Text(
+          'cartdash.',
+          style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20, letterSpacing: -1.0, color: textColor),
+        ),
+        centerTitle: false,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none_rounded),
-            onPressed: () {},
-          ),
+          IconButton(icon: const Icon(Icons.notifications_none_rounded, size: 22), onPressed: () {}),
           const SizedBox(width: 8),
         ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(1),
+          child: Container(color: borderColor, height: 1),
+        ),
       ),
       body: BlocListener<CartBloc, CartState>(
         listener: (context, state) {
@@ -263,37 +98,56 @@ class _CartScreenState extends State<CartScreen> {
             showRollbackErrorBottomSheet(
               context,
               errorMessage: state.errorMessage!,
-              onDismiss: () {
-                context.read<CartBloc>().add(const ClearErrorEvent());
-              },
+              onDismiss: () => context.read<CartBloc>().add(const ClearErrorEvent()),
             );
           }
         },
         child: Column(
           children: [
-            // Demo Control Panel
             DemoControlPanel(apiService: widget.apiService),
-            // Product List
             Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                itemCount: products.length,
-                itemBuilder: (context, index) {
-                  final product = products[index];
-                  return ProductListItem(
-                    product: product,
-                    onAddToCart: () {
-                      context.read<CartBloc>().add(
-                            AddToCartEvent(
+              child: Focus(
+                focusNode: _focusNode,
+                autofocus: true,
+                onKeyEvent: (node, event) {
+                  _handleKeyEvent(event);
+                  return KeyEventResult.ignored;
+                },
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final screenWidth = constraints.maxWidth;
+                    final crossAxisCount = screenWidth > 900
+                        ? 4
+                        : screenWidth > 600
+                            ? 3
+                            : 2;
+                    return GridView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.all(16),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: crossAxisCount,
+                        childAspectRatio: 0.80,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                      ),
+                      itemCount: products.length,
+                      itemBuilder: (context, index) {
+                        final product = products[index];
+                        return ProductGridItem(
+                          product: product,
+                          onAddToCart: () {
+                            context.read<CartBloc>().add(AddToCartEvent(
                               itemId: product['id'],
                               name: product['name'],
                               imageUrl: product['image'],
                               price: product['price'],
-                            ),
-                          );
-                    },
-                  );
-                },
+                            ));
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -303,56 +157,37 @@ class _CartScreenState extends State<CartScreen> {
         builder: (context, state) {
           if (state is CartUpdated) {
             return Padding(
-              padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
+              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Cart Items Display
                   if (state.items.isNotEmpty)
                     Container(
                       decoration: BoxDecoration(
                         color: theme.colorScheme.surface,
-                        border: Border(
-                          top: BorderSide(
-                            color: isDark ? const Color(0xFF243046) : const Color(0xFFE5E7EB),
-                            width: 1,
-                          ),
+                        border: Border(top: BorderSide(color: borderColor, width: 1)),
+                      ),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxHeight: 260),
+                        child: ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.symmetric(vertical: 4),
+                          children: state.items.map((item) => CartItemCard(
+                            item: item,
+                            onIncrement: () => context.read<CartBloc>().add(IncrementQuantityEvent(item.id)),
+                            onDecrement: () => context.read<CartBloc>().add(DecrementQuantityEvent(item.id)),
+                            onRemove: () => context.read<CartBloc>().add(RemoveFromCartEvent(item.id)),
+                            isProcessing: state.isProcessing,
+                          )).toList(),
                         ),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: state.items.map((item) {
-                          return CartItemCard(
-                            item: item,
-                            onIncrement: () {
-                              context.read<CartBloc>().add(
-                                    IncrementQuantityEvent(item.id),
-                                  );
-                            },
-                            onDecrement: () {
-                              context.read<CartBloc>().add(
-                                    DecrementQuantityEvent(item.id),
-                                  );
-                            },
-                            onRemove: () {
-                              context.read<CartBloc>().add(
-                                    RemoveFromCartEvent(item.id),
-                                  );
-                            },
-                            isProcessing: state.isProcessing,
-                          );
-                        }).toList(),
-                      ),
                     ),
-                  // Floating Checkout Bar
                   FloatingCheckoutBar(
                     totalPrice: state.totalPrice,
                     itemCount: state.items.length,
                     onCheckout: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Proceeding to checkout...')),
+                        const SnackBar(content: Text('Proceeding to checkout...'), behavior: SnackBarBehavior.floating),
                       );
                     },
                   ),
@@ -367,102 +202,77 @@ class _CartScreenState extends State<CartScreen> {
   }
 }
 
-class ProductListItem extends StatelessWidget {
+class ProductGridItem extends StatelessWidget {
   final Map<String, dynamic> product;
   final VoidCallback onAddToCart;
 
-  const ProductListItem({
-    Key? key,
-    required this.product,
-    required this.onAddToCart,
-  }) : super(key: key);
+  const ProductGridItem({Key? key, required this.product, required this.onAddToCart}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final borderColor = isDark ? const Color(0xFF2E3B4E) : const Color(0xFFE2E8F0);
+    final textColor = theme.colorScheme.onSurface;
+    final subtextColor = isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+    final accentColor = isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7);
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: borderColor, width: 1),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(6),
+              child: Image.network(
+                product['image'],
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Center(
+                  child: Icon(Icons.image_not_supported_outlined, color: subtextColor, size: 28),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          product['name'],
+          style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: textColor),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 6),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Product Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+            Text(
+              '\$${(product['price'] as double).toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: textColor),
+            ),
+            GestureDetector(
+              onTap: onAddToCart,
               child: Container(
-                width: 90,
-                height: 90,
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
-                        : [const Color(0xFFF3F4F6), const Color(0xFFE5E7EB)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  borderRadius: BorderRadius.circular(3),
+                  border: Border.all(color: accentColor, width: 1),
                 ),
-                child: Image.network(
-                  product['image'],
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Center(
-                      child: Icon(
-                        Icons.shopping_bag_outlined,
-                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF6B7280),
-                        size: 32,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            // Product Details
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    product['name'],
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: isDark ? const Color(0xFFF3F4F6) : const Color(0xFF1F2937),
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(
-                    '\$${product['price']}',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: theme.colorScheme.primary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 12),
-            // Add to Cart Button
-            ElevatedButton.icon(
-              onPressed: onAddToCart,
-              icon: const Icon(Icons.add_rounded, size: 16),
-              label: const Text('Add'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: theme.colorScheme.primaryContainer,
-                foregroundColor: theme.colorScheme.onPrimaryContainer,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+                child: Text(
+                  'ADD',
+                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w800, letterSpacing: 0.6, color: accentColor),
                 ),
               ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }

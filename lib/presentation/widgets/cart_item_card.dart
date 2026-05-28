@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/cart_item.dart';
-import '../../domain/models/cart_event.dart';
 import 'animated_quantity_badge.dart';
 
 class CartItemCard extends StatelessWidget {
@@ -23,43 +22,33 @@ class CartItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
+    final borderColor = isDark ? const Color(0xFF2E3B4E) : const Color(0xFFE2E8F0);
+    final textColor = theme.colorScheme.onSurface;
+    final subtextColor = isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
         color: theme.cardTheme.color ?? theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: isDark ? const Color(0xFF243046) : const Color(0xFFE5E7EB),
+          color: borderColor,
           width: 1,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
       child: Padding(
-        padding: const EdgeInsets.all(14.0),
+        padding: const EdgeInsets.all(12.0),
         child: Row(
           children: [
-            // Product Image
             ClipRRect(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(4),
               child: Container(
-                width: 90,
-                height: 90,
+                width: 48,
+                height: 48,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: isDark
-                        ? [const Color(0xFF1E293B), const Color(0xFF0F172A)]
-                        : [const Color(0xFFF3F4F6), const Color(0xFFE5E7EB)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
+                  color: isDark ? const Color(0xFF1E293B) : const Color(0xFFF1F5F9),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Image.network(
                   item.imageUrl,
@@ -68,15 +57,15 @@ class CartItemCard extends StatelessWidget {
                     return Center(
                       child: Icon(
                         Icons.shopping_bag_outlined,
-                        color: isDark ? const Color(0xFF94A3B8) : const Color(0xFF9CA3AF),
-                        size: 32,
+                        color: subtextColor,
+                        size: 20,
                       ),
                     );
                   },
                 ),
               ),
             ),
-            const SizedBox(width: 14),
+            const SizedBox(width: 12),
             // Product Details
             Expanded(
               child: Column(
@@ -86,37 +75,34 @@ class CartItemCard extends StatelessWidget {
                     item.name,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      letterSpacing: -0.3,
-                      color: isDark ? const Color(0xFFF3F4F6) : const Color(0xFF1F2937),
+                      fontSize: 14,
+                      color: textColor,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
-                  RichText(
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '\$${item.price.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 13,
-                            color: isDark ? const Color(0xFF64748B) : Colors.grey,
-                            decoration: TextDecoration.lineThrough,
-                          ),
-                        ),
-                        const TextSpan(text: '  '),
-                        TextSpan(
-                          text: '\$${item.subtotal.toStringAsFixed(2)}',
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: theme.colorScheme.primary,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
+                  const SizedBox(height: 4),
+                  // Clean, minimal price description
+                  Text(
+                    item.quantity > 1 
+                        ? '\$${item.price.toStringAsFixed(2)} each' 
+                        : '\$${item.price.toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: subtextColor,
                     ),
                   ),
+                  if (item.quantity > 1) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      'Total: \$${item.subtotal.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: textColor,
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -128,14 +114,16 @@ class CartItemCard extends StatelessWidget {
               onDecrement: onDecrement,
               isProcessing: isProcessing,
             ),
-            const SizedBox(width: 8),
+            const SizedBox(width: 4),
             // Remove Button
             IconButton(
               onPressed: isProcessing ? null : onRemove,
-              icon: const Icon(Icons.close),
-              color: isDark ? const Color(0xFF94A3B8) : Colors.grey[400],
-              iconSize: 20,
-              splashRadius: 24,
+              icon: const Icon(Icons.close_rounded),
+              color: subtextColor.withOpacity(0.8),
+              iconSize: 18,
+              splashRadius: 18,
+              constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+              padding: EdgeInsets.zero,
             ),
           ],
         ),

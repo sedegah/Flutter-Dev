@@ -16,12 +16,19 @@ class AnimatedQuantityBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    
+    final borderColor = isDark ? const Color(0xFF2E3B4E) : const Color(0xFFE2E8F0);
+    final bgColor = isDark ? const Color(0xFF1E293B).withOpacity(0.5) : const Color(0xFFF8FAFC);
+    final textColor = theme.colorScheme.onSurface;
+
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFF3F4F6),
-        borderRadius: BorderRadius.circular(10),
+        color: bgColor,
+        borderRadius: BorderRadius.circular(4),
         border: Border.all(
-          color: Colors.grey[200]!,
+          color: borderColor,
           width: 1,
         ),
       ),
@@ -29,48 +36,52 @@ class AnimatedQuantityBadge extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
-            iconSize: 18,
+            iconSize: 16,
             onPressed: isProcessing ? null : onDecrement,
             icon: Icon(
               Icons.remove,
-              color: isProcessing ? Colors.grey[300] : Colors.grey[600],
+              color: isProcessing 
+                  ? textColor.withOpacity(0.3) 
+                  : textColor.withOpacity(0.7),
             ),
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-            splashRadius: 20,
+            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+            splashRadius: 16,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6.0),
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
             child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
+              duration: const Duration(milliseconds: 150),
               transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(scale: animation, child: child);
+                return FadeTransition(opacity: animation, child: child);
               },
               child: SizedBox(
-                width: 24,
+                width: 20,
                 child: Text(
                   '$quantity',
                   key: ValueKey<int>(quantity),
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    fontSize: 16,
-                    color: Color(0xFF1F2937),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    color: textColor,
                   ),
                 ),
               ),
             ),
           ),
           IconButton(
-            iconSize: 18,
+            iconSize: 16,
             onPressed: isProcessing ? null : onIncrement,
             icon: Icon(
               Icons.add,
-              color: isProcessing ? Colors.grey[300] : const Color(0xFF6366F1),
+              color: isProcessing 
+                  ? textColor.withOpacity(0.3) 
+                  : textColor,
             ),
             padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-            splashRadius: 20,
+            constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+            splashRadius: 16,
           ),
         ],
       ),

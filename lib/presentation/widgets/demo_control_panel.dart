@@ -29,19 +29,18 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
+    final borderColor = isDark ? const Color(0xFF2E3B4E) : const Color(0xFFE2E8F0);
+    final bgColor = isDark ? const Color(0xFF0F172A).withOpacity(0.5) : const Color(0xFFF8FAFC);
+    final textColor = theme.colorScheme.onSurface;
+    final subtextColor = isDark ? const Color(0xFF94A3B8) : const Color(0xFF64748B);
+
     return Container(
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [const Color(0xFF1E293B).withOpacity(0.4), const Color(0xFF0F172A).withOpacity(0.4)]
-              : [const Color(0xFFF0F4FF), const Color(0xFFF8FAFF)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: bgColor,
         border: Border(
           bottom: BorderSide(
-            color: isDark ? const Color(0xFF243046) : Colors.grey[200]!,
+            color: borderColor,
             width: 1,
           ),
         ),
@@ -49,134 +48,114 @@ class _DemoControlPanelState extends State<DemoControlPanel> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Section Title (Uppercase, flat, minimal)
+          Text(
+            'DEMO SETTINGS',
+            style: TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 11,
+              letterSpacing: 1.0,
+              color: textColor.withOpacity(0.6),
+            ),
+          ),
+          const SizedBox(height: 14),
+          // Latency Controller
           Row(
             children: [
-              Container(
-                width: 4,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF6366F1),
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Text(
-                '🎮 Demo Control Panel',
-                style: TextStyle(
-                  fontWeight: FontWeight.w700,
-                  fontSize: 15,
-                  color: isDark ? const Color(0xFFF9FAFB) : const Color(0xFF111827),
-                  letterSpacing: -0.2,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Network Latency Slider
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '⏱️ Network Latency',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'LATENCY',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 0.5,
+                            color: textColor,
+                          ),
+                        ),
+                        Text(
+                          '${networkLatency}ms',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w800,
+                            color: isDark ? const Color(0xFF38BDF8) : const Color(0xFF0284C7),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 4,
-                    ),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6366F1).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      '${networkLatency}ms',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF6366F1),
+                    const SizedBox(height: 4),
+                    SliderTheme(
+                      data: SliderTheme.of(context).copyWith(
+                        trackHeight: 2,
+                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 6),
+                        overlayShape: const RoundSliderOverlayShape(overlayRadius: 14),
+                        activeTrackColor: textColor,
+                        inactiveTrackColor: borderColor,
+                        thumbColor: textColor,
+                        overlayColor: textColor.withOpacity(0.1),
+                      ),
+                      child: Slider(
+                        min: 0,
+                        max: 3000,
+                        divisions: 30,
+                        value: networkLatency.toDouble(),
+                        onChanged: (value) {
+                          setState(() {
+                            networkLatency = value.toInt();
+                            widget.apiService.setNetworkLatency(networkLatency);
+                          });
+                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Slider(
-                min: 0,
-                max: 3000,
-                divisions: 30,
-                value: networkLatency.toDouble(),
-                onChanged: (value) {
-                  setState(() {
-                    networkLatency = value.toInt();
-                    widget.apiService.setNetworkLatency(networkLatency);
-                  });
-                },
-                activeColor: const Color(0xFF6366F1),
-                inactiveColor: isDark ? const Color(0xFF334155) : const Color(0xFFE2E8F0),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    '0ms',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF9CA3AF),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    '3000ms',
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Color(0xFF9CA3AF),
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          // Force Failure Toggle
+          const SizedBox(height: 12),
+          // Force Failure switch
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF1E293B) : Colors.white,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(4),
               border: Border.all(
-                color: isDark ? const Color(0xFF334155) : Colors.grey[200]!,
+                color: borderColor,
                 width: 1,
               ),
+              color: isDark ? const Color(0xFF1E293B).withOpacity(0.3) : Colors.white,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '🔴 Force Out of Stock',
+                  'FORCE OUT OF STOCK ERROR',
                   style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
-                    color: isDark ? const Color(0xFFD1D5DB) : const Color(0xFF374151),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.5,
+                    color: textColor,
                   ),
                 ),
-                Switch(
-                  value: forceFailure,
-                  onChanged: (value) {
-                    setState(() {
-                      forceFailure = value;
-                      widget.apiService.setForceFailure(forceFailure);
-                    });
-                  },
-                  activeColor: const Color(0xFFDC2626),
+                SizedBox(
+                  height: 24,
+                  child: Switch(
+                    value: forceFailure,
+                    onChanged: (value) {
+                      setState(() {
+                        forceFailure = value;
+                        widget.apiService.setForceFailure(forceFailure);
+                      });
+                    },
+                    activeColor: isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A),
+                    activeTrackColor: isDark ? const Color(0xFF475569) : const Color(0xFFCBD5E1),
+                    inactiveThumbColor: subtextColor,
+                    inactiveTrackColor: borderColor,
+                  ),
                 ),
               ],
             ),

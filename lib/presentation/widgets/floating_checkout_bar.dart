@@ -14,86 +14,102 @@ class FloatingCheckoutBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Monochrome theme colors
+    // Light mode -> Dark bar (Black background, White text)
+    // Dark mode -> Light bar (White background, Black text)
+    final bgColor = isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A);
+    final textColor = isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC);
+    final subtextColor = isDark ? const Color(0xFF475569) : const Color(0xFF94A3B8);
+    final buttonBgColor = isDark ? const Color(0xFF0F172A) : const Color(0xFFF8FAFC);
+    final buttonTextColor = isDark ? const Color(0xFFF8FAFC) : const Color(0xFF0F172A);
+    final borderColor = isDark ? const Color(0xFFE2E8F0) : const Color(0xFF1E293B);
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            const Color(0xFF6366F1),
-            const Color(0xFF8B5CF6),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF6366F1).withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, -4),
+        color: bgColor,
+        border: Border(
+          top: BorderSide(
+            color: borderColor,
+            width: 1,
           ),
-        ],
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Order Total Section
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Order Total',
+              Text(
+                'ORDER TOTAL (${itemCount} item${itemCount != 1 ? 's' : ''})',
                 style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5,
+                  color: subtextColor,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.8,
                 ),
               ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 4),
               TweenAnimationBuilder<double>(
                 tween: Tween<double>(begin: 0, end: totalPrice),
-                duration: const Duration(milliseconds: 300),
+                duration: const Duration(milliseconds: 250),
                 builder: (context, value, child) {
                   return Text(
                     '\$${value.toStringAsFixed(2)}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      color: textColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: -0.5,
                     ),
                   );
                 },
               ),
             ],
           ),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '$itemCount item${itemCount != 1 ? 's' : ''}',
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500,
-                  letterSpacing: 0.5,
-                ),
+          // Checkout Button Section
+          OutlinedButton(
+            onPressed: itemCount > 0 ? onCheckout : null,
+            style: OutlinedButton.styleFrom(
+              backgroundColor: buttonBgColor,
+              foregroundColor: buttonTextColor,
+              side: BorderSide.none,
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
               ),
-              const SizedBox(height: 6),
-              ElevatedButton.icon(
-                onPressed: itemCount > 0 ? onCheckout : null,
-                icon: const Icon(Icons.shopping_cart_checkout, size: 18),
-                label: const Text(
-                  'Checkout',
-                  style: TextStyle(fontWeight: FontWeight.w600),
+              disabledBackgroundColor: isDark ? const Color(0xFFE2E8F0) : const Color(0xFF1E293B),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'CHECKOUT',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 13,
+                    color: itemCount > 0 
+                        ? buttonTextColor 
+                        : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569)),
+                    letterSpacing: 0.5,
+                  ),
                 ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: const Color(0xFF6366F1),
-                  elevation: 0,
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.arrow_forward_rounded,
+                  size: 14,
+                  color: itemCount > 0 
+                      ? buttonTextColor 
+                      : (isDark ? const Color(0xFF94A3B8) : const Color(0xFF475569)),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),
